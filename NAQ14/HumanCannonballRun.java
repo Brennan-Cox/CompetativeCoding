@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 /**
+ * https://open.kattis.com/problems/humancannonball
  * Convert problem into a Dijkstra's algorithm problem
  * and then solve!
  */
@@ -38,22 +39,25 @@ public class HumanCannonballRun {
     class Edge {
         Node node;
         double time;
+
         public Edge(Node node, double time) {
             this.node = node;
             this.time = time;
         }
     }
-    
+
     /**
      * Something meant to represent a node in a priority queue
      */
     class QueueNode implements Comparable<QueueNode> {
         Node node;
         double time;
+
         public QueueNode(Node node, double time) {
             this.node = node;
             this.time = time;
         }
+
         public int compareTo(QueueNode other) {
             return Double.compare(time, other.time);
         }
@@ -61,6 +65,7 @@ public class HumanCannonballRun {
 
     /**
      * Creates a list of nodes from the input
+     * 
      * @return
      */
     List<Node> readInput() {
@@ -69,7 +74,7 @@ public class HumanCannonballRun {
         nodes.add(new Node(s, false));
         nodes.add(new Node(s, false));
         int n = s.nextInt();
-        for(;n > 0; n--) {
+        for (; n > 0; n--) {
             nodes.add(new Node(s, true));
         }
         return nodes;
@@ -77,12 +82,13 @@ public class HumanCannonballRun {
 
     // use a helper!
     double distance(Node a, Node b) {
-        //sqrt((x2-x1)^2 + (y2-y1)^2)
+        // sqrt((x2-x1)^2 + (y2-y1)^2)
         return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     }
 
     /**
      * return the seconds to walk from a to b
+     * 
      * @param a
      * @param b
      * @return
@@ -94,12 +100,13 @@ public class HumanCannonballRun {
 
     /**
      * returns the seconds to cannon then walk from a to b
+     * 
      * @param a
      * @param b
      * @return
      */
     double cannonTime(Node a, Node b) {
-        // min of walking dist and 
+        // min of walking dist and
         // of dist minus 50 over 5 plus 2
         // must be a dist of 50 in some direction (overshoot possible) => abs
         // |dist(a, b) - 50| / 5 + 2
@@ -109,6 +116,7 @@ public class HumanCannonballRun {
     /**
      * Calculates all edges between nodes
      * creating a fully connected graph
+     * 
      * @param nodes
      */
     void calculateEdges(List<Node> nodes) {
@@ -147,17 +155,17 @@ public class HumanCannonballRun {
         // enter your start point into the queue
         queue.add(new QueueNode(start, 0));
         // while there are still nodes to visit
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             // get the best from front of the queue
             QueueNode qn = queue.poll();
             // if the best is the end, we're done!
-            if(qn.node == end) {
+            if (qn.node == end) {
                 // format output
                 System.out.println(qn.time);
                 return;
             }
             // for every edge from the best node
-            for(Edge e : qn.node.edges) {
+            for (Edge e : qn.node.edges) {
                 if (visited.contains(e)) {
                     continue;
                 }
@@ -175,34 +183,38 @@ public class HumanCannonballRun {
 }
 
 class FastScanner {
-        BufferedReader br;
-        StringTokenizer st;
+    BufferedReader br;
+    StringTokenizer st;
 
-        public FastScanner(Reader in) {
-            br = new BufferedReader(in);
-        }
-
-        public FastScanner(InputStream in) {
-            this(new InputStreamReader(in));
-        }
-
-        public String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return st.nextToken();
-        }
-
-        public int nextInt() {
-            return Integer.parseInt(next());
-        }
-        public long nextLong() {
-            return Long.parseLong(next());
-        }
-        public double nextDouble() { return Double.parseDouble(next());}
-
+    public FastScanner(Reader in) {
+        br = new BufferedReader(in);
     }
+
+    public FastScanner(InputStream in) {
+        this(new InputStreamReader(in));
+    }
+
+    public String next() {
+        while (st == null || !st.hasMoreElements()) {
+            try {
+                st = new StringTokenizer(br.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return st.nextToken();
+    }
+
+    public int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    public long nextLong() {
+        return Long.parseLong(next());
+    }
+
+    public double nextDouble() {
+        return Double.parseDouble(next());
+    }
+
+}

@@ -3,14 +3,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
-/**
- * https://open.kattis.com/problems/8queens
- */
-class EightQueens {
+public class EQueens {
 
     /**
      * Let's create a Pair to keep track of a position on the board
@@ -25,7 +21,7 @@ class EightQueens {
 
         @Override
         public int hashCode() {
-            return (x + "" + y).hashCode();
+            return x + y;
         }
 
         @Override
@@ -39,89 +35,83 @@ class EightQueens {
             Pair other = (Pair) obj;
             return (x == other.x && y == other.y);
         }
-
-        @Override
-        public String toString() {
-            return String.format("(%d, %d)", x, y);
-        }
     }
 
-    /**
-     * Lets do the operation of moving the queen in all valid directions
-     * 
-     * @param queens
-     * @param x
-     * @param y
-     */
-    void queenMoves(HashSet<Pair> queens, int x, int y) {
-        final int bound = 8;
-        // queen moves up and down |
-        for (int i = 0; i < bound; i++) {
-            queens.add(new Pair(i, y));
-        }
-        // queen moves left and right --
-        for (int i = 0; i < bound; i++) {
-            queens.add(new Pair(x, i));
-        }
-        // queen moves diagonally \
-        {
-            int i = x, j = y;
-            while (i > 0 && j > 0) {
-                i--;
-                j--;
-            }
-            while (i < bound && j < bound) {
-                queens.add(new Pair(i, j));
-                i++;
-                j++;
-            }
-        }
-        // queen moves diagonally /
-        {
-            int i = x, j = y;
-            while (i > 0 && j < bound) {
-                i--;
-                j++;
-            }
-            while (i < bound && j > 0) {
-                queens.add(new Pair(i, j));
-                i++;
-                j--;
-            }
-        }
-    }
-
-    /**
-     * Implementation
-     */
-    EightQueens() {
-        // read full input
-        FastScanner s = new FastScanner(System.in);
-        // keep track of all queens placed and their possible moves
-        HashSet<Pair> queens = new HashSet<>();
-        int count = 0;
-        for (int i = 0; i < 8; i++) {
-
-            String line = s.next();
-            // for each cell if queen determine if possible to place
-            for (int j = 0; j < 8; j++) {
-                if (line.charAt(j) == '*') {
-                    count++;
-                    if (queens.contains(new Pair(i, j))) {
-                        System.out.println("invalid");
-                        return;
+    boolean valid(HashSet<Pair> queens) {
+        for (Pair queen : queens) {
+            // move vertically
+            for (int i = 0; i < 8; i++) {
+                if (i != queen.x) {
+                    if (queens.contains(new Pair(i, queen.y))) {
+                        return false;
                     }
-                    queens.add(new Pair(i, j));
-                    queenMoves(queens, i, j);
+                }
+            }
+            // move horizontally
+            for (int i = 0; i < 8; i++) {
+                if (i != queen.y) {
+                    if (queens.contains(new Pair(queen.x, i))) {
+                        return false;
+                    }
+                }
+            }
+            // move diagonally \
+            {
+                int x = queen.x;
+                int y = queen.y;
+                while (x > 0 && y > 0) {
+                    x--;
+                    y--;
+                }
+                while (x < 8 && y < 8) {
+                    if (x != queen.x && y != queen.y) {
+                        if (queens.contains(new Pair(x, y))) {
+                            return false;
+                        }
+                    }
+                    x++;
+                    y++;
+                }
+            }
+            // move diagonally /
+            {
+                int x = queen.x;
+                int y = queen.y;
+                while (x > 0 && y < 7) {
+                    x--;
+                    y++;
+                }
+                while (x < 8 && y >= 0) {
+                    if (x != queen.x && y != queen.y) {
+                        if (queens.contains(new Pair(x, y))) {
+                            return false;
+                        }
+                    }
+                    x++;
+                    y--;
                 }
             }
         }
-        // COUNT WAS IMPORTANT!
-        System.out.println(count == 8 ? "valid" : "invalid");
+        // if we have 8 queens, then we are valid!
+        return queens.size() == 8;
+    }
+
+    EQueens() {
+        FastScanner sc = new FastScanner(System.in);
+        HashSet<Pair> queens = new HashSet<>();
+        for (int i = 0; i < 8; i++) {
+            String line = sc.next();
+            for (int j = 0; j < 8; j++) {
+                if (line.charAt(j) == '*') {
+                    queens.add(new Pair(i, j));
+                }
+            }
+        }
+        System.out.println(valid(queens) ? "valid" : "invalid");
     }
 
     public static void main(String[] args) {
-        new EightQueens();
+        new EQueens();
     }
 }
 
