@@ -145,7 +145,7 @@ public class HumanCannonballRun {
         // end location was the second read in
         Node end = nodes.get(1);
         // Dijkstra's algorithm
-        // PiorityQueue will keep the best option first
+        // PriorityQueue will keep the best option first
         PriorityQueue<QueueNode> queue = new PriorityQueue<>();
         // visited will keep track of which edges we've already visited
         // This is useful because we can't remove edges from the queue
